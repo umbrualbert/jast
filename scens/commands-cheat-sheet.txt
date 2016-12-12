@@ -1,0 +1,11 @@
+#Send OPTIONS
+sipp 192.168.1.211 -sf OPTIONS.xml -m 5 -s 30
+./sipp 192.168.0.200 -sf uac-asterisk-tt-monkeys.xml -s 0788032811 -p 5060 -r 5 -m 10000 -l 100
+
+
+
+UAS - Server Side
+./sipp -i 192.168.100.1 -mi 192.168.100.1 -mp 16384 -rtp_echo -sn uas
+
+UAC - CLient Side
+sudo ./sipp -sf 17minutes_G711.xml -inf 2numbers.csv -i 192.168.69.1 -mi 192.168.69.1 192.168.69.200:5069 -s albert -r 1 -m 10

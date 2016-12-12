@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<scenario name="INVITE">
+	<send>
+		<![CDATA[
+
+	INVITE sip:+27877005999@197.80.141.4;user=phone SIP/2.0
+	Via: SIP/2.0/UDP 41.48.8.120:9131;branch=z9hG4bK61735b9135498a206b05a0691
+	Call-ID: isbc1079034fda9ee45362e2958081a403f7@10.18.5.64
+	From: "27745618248"<sip:+27745618248@197.80.141.4;transport=udp;user=phone>;tag=sbc04039a9280b0-CC-1000-TRC-262108
+	To: "27877005999"<sip:+27877005999@197.80.141.4;transport=udp;user=phone>
+	CSeq: 1 INVITE
+	Max-Forwards: 70
+	P-Access-Network-Info: GEN-ACCESS;"area-number=+27841000037"
+	Contact: <sip:41.48.8.120:9131;user=phone>
+	Allow: INVITE,ACK,OPTIONS,BYE,CANCEL,INFO,PRACK,NOTIFY,MESSAGE,REFER,UPDATE
+	P-Asserted-Identity: <tel:+27745618248>
+	Supported: 100rel,timer,histinfo,precondition
+	Min-SE: 90
+	Session-Expires: 1800;refresher=uac
+	P-Early-Media: supported
+	Content-Length: 322
+	Content-Type: application/sdp
+
+	v=0
+	o=- 1079844277 1079844278 IN IP4 41.48.8.121
+	s=SBC call
+	c=IN IP4 41.48.8.121
+	t=0 0
+	m=audio 59490 RTP/AVP 18 116
+	a=rtpmap:18 G729/8000
+	a=rtpmap:116 telephone-event/8000
+	a=ptime:20
+	a=curr:qos local none
+	a=curr:qos remote none
+	a=des:qos mandatory local sendrecv
+	a=des:qos optional remote sendrecv
+	a=3gOoBTC
+	
+]]>
+	</send>
+</scenario>
