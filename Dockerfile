@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-MAINTAINER = Aman Mangal <amanmangal@gatech.edu>
+MAINTAINER = Albert Etsebeth - umbrualbert@gmail.com
 
 # install depedencies from standard repos
 RUN apt-get update && apt-get install -y net-tools build-essential wget libncurses5-dev libpcap-dev libdnet-dev
