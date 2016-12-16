@@ -21,5 +21,6 @@ sleep 5
 
 #cd /data && sipp -bg -trace_stat -fd 1s -trace_rtt -rtt_freq 200 -trace_logs -trace_err -i $IF $ARGS
 #New SIPp command
-cd /data && sipp $ARGS
+#cd /data && sipp $ARGS
+sipp $ARGS
 #tail -f /dev/null
