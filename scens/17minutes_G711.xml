@@ -84,7 +84,7 @@
   <!-- Play a pre-recorded PCAP file (RTP stream)                       -->
   <nop>
     <action>
-      <exec play_pcap_audio="pcap/17Minutes_g711ALAW.pcap"/>
+      <exec play_pcap_audio="scens/17Minutes_g711ALAW.pcap"/>
     </action>
   </nop>
 
