@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE scenario SYSTEM "sipp.dtd">
+
+<!--
+SIP Messages
+============
+
+<-Rx-- INVITE
+--Tx-> 100
+--Tx-> 180
+<-Rx-- PRACK
+--Tx-> 200 (PRACK)
+------ Pause[ms]=350
+--Tx-> 200 (INVITE)
+<-Rx-- ACK
+------ Play pcap=<test_file..pcap
+------ Pause[ms]=10000
+--Tx-> UPDATE
+------ Play pcap=<test_file..pcap
+<-Rx-- 200 (UPDATE)
+<-Rx-- BYE
+--Tx-> 200 (BYE)
+-->
+
+<scenario name="Advanced call termination script using g711a">
+
+<!--
+Now sit and wait for an incoming call ...
+-->
+  <recv request="INVITE">
+    <action>
+      <ereg regexp="[Bb]ranch=(.*)" search_in="hdr" header="Via:" check_it="true" assign_to="INVbranch" />
+      <ereg regexp=".*" search_in="hdr" header="CSeq:" check_it="true" assign_to="INVcseq" />
+      <ereg regexp="\s+(.*)" search_in="hdr" header="Call-ID:" check_it="true" assign_to="INVCallID" />
+    </action>
+  </recv>
+
+<!--
+got a call.  Respond with 100 TRYING
+Note the new date keyword for the Date header
+-->
+ <send>
+  <![CDATA[
+
+      SIP/2.0 100 Trying
+      [last_Via:]
+      [last_From:]
+      [last_To:]
+      Date: [date]
+      [last_Call-ID:]
+      [last_CSeq:]
+      Allow-Events: telephone-event
+      Server: Cisco-SIPGateway/IOS-15.3.2.T
+      Content-Length: 0
+
+  ]]>
+ </send>
+
+<!--
+Ring Ring......
+-->
+  <send>
+    <![CDATA[
+
+      SIP/2.0 183 Session Progress
+      [last_Via:]
+      [last_From:]
+      [last_To:];tag=[call_number]
+      Date: [date]
+      [last_Call-ID:]
+      [last_CSeq:]
+      Require: 100rel
+      RSeq: 1234
+      Allow: INVITE, OPTIONS, BYE, CANCEL, ACK, PRACK, UPDATE, REFER, SUBSCRIBE, NOTIFY, INFO, REGISTER
+      Allow-Events: telephone-event
+      Contact: <sip:[field1]@[local_ip]:[local_port]>
+      Content-Length: 0
+
+    ]]>
+  </send>
+
+<!--
+PRACK transaction initiated by Network as per our
+Require 100rel header in the 180 ringing message
+-->
+
+  <recv request="PRACK">
+    <action>
+      <ereg regexp="[Bb]ranch=(.*)" search_in="hdr" header="Via:" check_it="true" assign_to="PRKbranch" />
+      <ereg regexp=":(.*)@" search_in="hdr" header="From:" check_it="true" assign_to="_,INVFromUser" />
+      <ereg regexp=".*" search_in="hdr" header="To:" check_it="true" assign_to="INVTo" />
+      <ereg regexp=".*" search_in="hdr" header="CSeq:" check_it="true" assign_to="PRKcseq" />
+    </action>
+  </recv>
+
+<!--
+200 OK response (PRACK)......
+-->
+  <send>
+    <![CDATA[
+
+      SIP/2.0 200 OK
+      Via: SIP/2.0/[transport] [remote_ip]:[remote_port];[$PRKbranch]
+      [last_From:]
+      [last_To:]
+      Date: [date]
+      [last_Call-ID:]
+      Server: Cisco-SIPGateway/IOS-15.3.2.T
+      CSeq: [$PRKcseq]
+      Content-Length: 0
+
+    ]]>
+  </send>
+
+<!--
+ Pause 350 milliseconds
+-->
+<pause milliseconds="350"/>
+
+
+<!--
+200 OK (INVITE)......
+Note: The two instances of the c= line in the
+SDP is deliberate to simulate the actual client correctly.
+-->
+  <send>
+    <![CDATA[
+
+      SIP/2.0 200 OK
+      Via: SIP/2.0/[transport] [remote_ip]:[remote_port];[$INVbranch]
+      [last_From:]
+      [last_To:]
+      Date: [date]
+      Call-ID: [$INVCallID]
+      CSeq: [$INVcseq]
+      Allow: INVITE, OPTIONS, BYE, CANCEL, ACK, PRACK, UPDATE, REFER, SUBSCRIBE, NOTIFY, INFO, REGISTER
+      Allow-Events: telephone-event
+      Contact: <sip:[field1]@[local_ip]:[local_port]>
+      Supported: replaces
+      Supported: sdp-anat
+      Server: Cisco-SIPGateway/IOS-15.3.2.T
+      Supported: timer
+      Content-Type: application/sdp
+      Content-Disposition: session;handling=required
+      Content-Length: [len]
+
+      v=0
+      o=CiscoSystemsSIP-GW-UserAgent 4723 4841 IN IP4 [local_ip]
+      s=SIP Call
+      c=IN IP4 [local_ip]
+      t=0 0
+      m=audio [media_port] RTP/AVP 8 101
+      c=IN IP4 [local_ip]
+      a=rtpmap:8 PCMA/8000
+      a=rtpmap:101 telephone-event/8000
+      a=fmtp:101 0-15
+      a=ptime:20
+
+    ]]>
+  </send>
+
+<!--
+  Send ACK for  the 200 OK message
+-->
+
+  <recv request="ACK" rtd="true" crlf="true">
+    <action>
+      <ereg regexp=".*" search_in="hdr" header="From:" check_it="true" assign_to="INVFrom" />
+    </action>
+  </recv>
+
+<!--
+ Play a pre-recorded PCAP file (RTP stream)
+-->
+  <nop>
+    <action>
+      <exec play_pcap_audio="/opt/common/pcaps/g711a-calling.pcap"/>
+    </action>
+  </nop>
+
+<!--
+ Pause 10 seconds so you can hear the audio
+-->
+<pause milliseconds="10000"/>
+
+<!--
+ Endpoint initiates an UPDATE transaction, not a session or target refresh seems to be for audit purposes.
+ Note: the Timestamp header with the timestamp we created earlier.
+-->
+  <send>
+    <![CDATA[
+
+      UPDATE sip:[$INVFromUser]@[local_ip]:[local_port];transport=[transport] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=z9hG4bK153FBA1F11
+      From: [$INVTo]
+      To: [$INVFrom]
+      Date: [date]
+      [last_Call-ID:]
+      User-Agent: Cisco-SIPGateway/IOS-15.3.2.T
+      Max-Forwards: 70
+      Supported: timer,resource-priority,replaces,sdp-anat
+      Timestamp: [$seconds]
+      Allow: INVITE, OPTIONS, BYE, CANCEL, ACK, PRACK, UPDATE, REFER, SUBSCRIBE, NOTIFY, INFO, REGISTER
+      CSeq: 101 UPDATE
+      Contact: <sip:[field1]@[local_ip]:[local_port]>
+      Min-SE:  1800
+      Content-Length: 0
+
+    ]]>
+  </send>
+
+<!--
+200 OK for UPDATE transaction.
+-->
+  <recv response="200" crlf="true">
+  </recv>
+
+<!--
+ Play a pre-recorded PCAP file (RTP stream)
+-->
+  <nop>
+    <action>
+      <exec play_pcap_audio="/opt/common/pcaps/g711a-calling.pcap"/>
+    </action>
+  </nop>
+
+  <recv request="BYE">
+  </recv>
+
+<!--
+OK the Bye...
+-->
+   <send>
+    <![CDATA[
+
+      SIP/2.0 200 OK
+      [last_Via:]
+      [last_From:]
+      [last_To:]
+      Date: [date]
+      [last_Call-ID:]
+      Server: Cisco-SIPGateway/IOS-15.3.2.T
+      [last_CSeq:]
+      Contact: <sip:[field1]@[local_ip]:[local_port]>
+      Reason: Q.850;cause=16
+      P-RTP-Stat: PS=25089,OS=4014240,PR=25086,OR=4013760,PL=0,JI=0,LA=0,DU=501
+      Content-Length: 0
+
+    ]]>
+  </send>
+
+  <!-- definition of the response time repartition table (unit is ms)   -->
+  <ResponseTimeRepartition value="10, 20, 30, 40, 50, 100, 150, 200"/>
+
+  <!-- definition of the call length repartition table (unit is ms)     -->
+  <CallLengthRepartition value="10, 50, 100, 500, 1000, 5000, 10000"/>
+
+</scenario>
