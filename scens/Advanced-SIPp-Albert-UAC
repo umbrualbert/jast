@@ -65,8 +65,9 @@
       s=-
       c=IN IP[local_ip_type] [local_ip]
       t=0 0
-      m=audio [auto_media_port] RTP/AVP 8 101
-      a=rtpmap:8 PCMA/8000
+      m=audio [auto_media_port] RTP/AVP 18 101
+      a=rtpmap:18 G729/8000
+      a=fmtp:18 annexb=no
       a=rtpmap:101 telephone-event/8000
       a=fmtp:101 0-11,16
 
@@ -187,7 +188,9 @@
         t=0 0
         m=audio [media_port] RTP/AVP 8 101
         c=IN IP4 [local_ip]
-        a=rtpmap:8 PCMA/8000
+        m=audio [auto_media_port] RTP/AVP 18 101
+        a=rtpmap:18 G729/8000
+        a=fmtp:18 annexb=no
         a=rtpmap:101 telephone-event/8000
         a=fmtp:101 0-15
         a=ptime:20
