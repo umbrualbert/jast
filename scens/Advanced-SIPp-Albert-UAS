@@ -46,7 +46,6 @@ Note the new date keyword for the Date header
       [last_Via:]
       [last_From:]
       [last_To:]
-      Date: [date]
       [last_Call-ID:]
       [last_CSeq:]
       Allow-Events: telephone-event
@@ -66,7 +65,6 @@ Ring Ring......
       [last_Via:]
       [last_From:]
       [last_To:];tag=[call_number]
-      Date: [date]
       [last_Call-ID:]
       [last_CSeq:]
       Require: 100rel
@@ -95,7 +93,7 @@ Ring Ring......
   <!-- Play a pre-recorded PCAP file (RTP stream)  | Early Media Sending           -->
   <nop>
     <action>
-      <exec play_pcap_audio="/scens/g711a.pcap"/>
+      <exec play_pcap_audio="scens/g711a.pcap"/>
     </action>
   </nop>
 
@@ -108,7 +106,7 @@ Require 100rel header in the 180 ringing message
   <recv request="PRACK">
     <action>
       <ereg regexp="[Bb]ranch=(.*)" search_in="hdr" header="Via:" check_it="true" assign_to="PRKbranch" />
-      <ereg regexp=":(.*)@" search_in="hdr" header="From:" check_it="true" assign_to="_,INVFromUser" />
+      <ereg regexp=":(.*)@" search_in="hdr" header="From:" check_it="true" assign_to="INVFromUser" />
       <ereg regexp=".*" search_in="hdr" header="To:" check_it="true" assign_to="INVTo" />
       <ereg regexp=".*" search_in="hdr" header="CSeq:" check_it="true" assign_to="PRKcseq" />
     </action>
@@ -124,7 +122,6 @@ Require 100rel header in the 180 ringing message
       Via: SIP/2.0/[transport] [remote_ip]:[remote_port];[$PRKbranch]
       [last_From:]
       [last_To:]
-      Date: [date]
       [last_Call-ID:]
       Server: Cisco-SIPGateway/IOS-15.3.2.T
       CSeq: [$PRKcseq]
@@ -150,7 +147,6 @@ SDP is deliberate to simulate the actual client correctly.
       Via: SIP/2.0/[transport] [remote_ip]:[remote_port];[$INVbranch]
       [last_From:]
       [last_To:]
-      Date: [date]
       Call-ID: [$INVCallID]
       CSeq: [$INVcseq]
       Allow: INVITE, OPTIONS, BYE, CANCEL, ACK, PRACK, UPDATE, REFER, SUBSCRIBE, NOTIFY, INFO, REGISTER
@@ -212,12 +208,10 @@ SDP is deliberate to simulate the actual client correctly.
       Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=z9hG4bK153FBA1F11
       From: [$INVTo]
       To: [$INVFrom]
-      Date: [date]
       [last_Call-ID:]
       User-Agent: Cisco-SIPGateway/IOS-15.3.2.T
       Max-Forwards: 70
       Supported: timer,resource-priority,replaces,sdp-anat
-      Timestamp: [$seconds]
       Allow: INVITE, OPTIONS, BYE, CANCEL, ACK, PRACK, UPDATE, REFER, SUBSCRIBE, NOTIFY, INFO, REGISTER
       CSeq: 101 UPDATE
       Contact: <sip:[field1]@[local_ip]:[local_port]>
@@ -250,9 +244,11 @@ SDP is deliberate to simulate the actual client correctly.
 -->
   <nop>
     <action>
-      <exec play_pcap_audio="/scens/17Minutes_g711ALAW.pcap"/>
+      <exec play_pcap_audio="scens/17Minutes_g711ALAW.pcap"/>
     </action>
   </nop>
+
+<pause milliseconds="90000"/>
 
   <recv request="BYE">
   </recv>
@@ -267,7 +263,6 @@ OK the Bye...
       [last_Via:]
       [last_From:]
       [last_To:]
-      Date: [date]
       [last_Call-ID:]
       Server: Cisco-SIPGateway/IOS-15.3.2.T
       [last_CSeq:]

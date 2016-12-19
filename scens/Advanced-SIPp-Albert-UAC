@@ -44,7 +44,7 @@
   --Tx-> 200 (BYE)
   -->
 
-  <send start_txn="invite" retrans="500">
+  <send retrans="500">
     <![CDATA[
 
       INVITE sip:[service]@[remote_ip]:[remote_port] SIP/2.0
@@ -77,19 +77,17 @@
   <recv response="100" optional="true">
   </recv>
 
-  <recv response="180" optional="true" next="3">
-  </recv>
-
-  <recv response="183" optional="true" next="3">
+  <recv response="183" next="3">
   </recv>
 
   <!--
   Send Provisional Ack
   Change CSeq and add To-tag received on 18x
   -->
+<label id="3"/>
 
   <send start_txn="prack" retrans="500">
-   <label id="3"/>
+
      <![CDATA[
 
       PRACK sip:[service]@[remote_ip]:[remote_port] SIP/2.0
@@ -124,7 +122,7 @@
   <pause milliseconds="90000"/>
 
 
-  <recv response="200" response_txn="invite" rtd="true" crlf="true">
+  <recv response="200" rtd="true" crlf="true">
   </recv>
 
   <!-- Packet lost can be simulated in any send/recv message by         -->
@@ -175,7 +173,6 @@
         Via: SIP/2.0/[transport] [remote_ip]:[remote_port];[$UPDATEbranch]
         [last_From:]
         [last_To:]
-        Date: [date]
         [last_Call-ID:]
         User-Agent: SIPp UAC
         CSeq: [$UPDATEcseq]
