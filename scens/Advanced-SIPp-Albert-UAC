@@ -119,7 +119,7 @@
   <!-- Early media from server for 183 (with SDP)                        -->
   <!-- Pause 90 seconds, which is approximately the duration of the      -->
   <!-- PCAP file                                                        -->
-  <pause milliseconds="45000"/>
+  <pause milliseconds="48000"/>
 
 
   <recv response="200" rtd="true" crlf="true">
