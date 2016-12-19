@@ -131,7 +131,7 @@ Require 100rel header in the 180 ringing message
 
   <!-- Pause 90 seconds, which is approximately the duration of the      -->
   <!-- PCAP file                                                        -->
-  <pause milliseconds="44000"/>
+  <pause milliseconds="45000"/>
 
 
 <!--
