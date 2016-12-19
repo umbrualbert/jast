@@ -1,0 +1,17 @@
+[Unit]
+Description=sipp01-scenario1
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=10
+Restart=always
+ExecStartPre=-/usr/bin/docker kill sipp01-scenario1-server
+ExecStartPre=-/usr/bin/docker kill sipp01-scenario1-client
+ExecStartPre=-/usr/bin/docker rm sipp01-scenario1-server
+ExecStartPre=-/usr/bin/docker rm sipp01-scenario1-client
+ExecStart=/usr/bin/docker run --cpu-shares=50 --net=host -dit -e ARGS="-i 192.168.168.16 -p 5060 -mi 192.168.168.16 -mp 16384 -rtp_echo -sf /scens/uas.xml" --name "sipp01-scenario1-server" sipp-image
+ExecStart=/usr/bin/docker run --cpu-shares=50 --net=host -dit -e ARGS="-i 192.168.168.15 -mi 192.168.168.15 -mp 16384 -sf /scens/uac.xml 192.168.168.10:5060 -r 10" --name "sipp01-scenario1-client" sipp-image
+
+[Install]
+WantedBy=multi-user.target
