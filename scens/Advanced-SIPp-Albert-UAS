@@ -203,9 +203,9 @@ SDP is deliberate to simulate the actual client correctly.
   <send start_txn="update">
     <![CDATA[
 
-      UPDATE sip:[$INVFromUser]@[local_ip]:[local_port];transport=[transport] SIP/2.0
-      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=z9hG4bK153FBA1F11
-      From: [$INVTo]
+      UPDATE sip:[$INVFromUser]@[remote_ip]:[local_port];transport=[transport] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=z9hG4bK153FBA1F11[pid][call_number]
+      From: "[field3]"[$INVTo]
       To: [$INVFrom]
       [last_Call-ID:]
       User-Agent: Cisco-SIPGateway/IOS-15.3.2.T
