@@ -29,7 +29,7 @@ Now sit and wait for an incoming call ...
 -->
   <recv request="INVITE">
     <action>
-      <ereg regexp="[Bb]ranch=(.*)" search_in="hdr" header="Via:" check_it="true" assign_to="INVbranch" />
+      <ereg regexp=".*" search_in="hdr" header="Via:" check_it="true" assign_to="INVITEvia" />
       <ereg regexp=".*" search_in="hdr" header="CSeq:" check_it="true" assign_to="INVcseq" />
       <ereg regexp="\s+(.*)" search_in="hdr" header="Call-ID:" check_it="true" assign_to="INVCallID" />
     </action>
@@ -93,7 +93,7 @@ Ring Ring......
   <!-- Play a pre-recorded PCAP file (RTP stream)  | Early Media Sending           -->
   <nop>
     <action>
-      <exec play_pcap_audio="scens/g711a.pcap"/>
+      <exec play_pcap_audio="scens/G711alaw_Early-media-ringing-rtp-only.pcap"/>
     </action>
   </nop>
 
@@ -105,7 +105,6 @@ Require 100rel header in the 180 ringing message
 
   <recv request="PRACK">
     <action>
-      <ereg regexp="[Bb]ranch=(.*)" search_in="hdr" header="Via:" check_it="true" assign_to="PRKbranch" />
       <ereg regexp=":(.*)@" search_in="hdr" header="From:" check_it="true" assign_to="INVFromUser" />
       <ereg regexp=".*" search_in="hdr" header="To:" check_it="true" assign_to="INVTo" />
       <ereg regexp=".*" search_in="hdr" header="CSeq:" check_it="true" assign_to="PRKcseq" />
@@ -132,7 +131,7 @@ Require 100rel header in the 180 ringing message
 
   <!-- Pause 90 seconds, which is approximately the duration of the      -->
   <!-- PCAP file                                                        -->
-  <pause milliseconds="90000"/>
+  <pause milliseconds="44000"/>
 
 
 <!--
@@ -144,7 +143,7 @@ SDP is deliberate to simulate the actual client correctly.
     <![CDATA[
 
       SIP/2.0 200 OK
-      Via: SIP/2.0/[transport] [remote_ip]:[remote_port];[$INVbranch]
+      Via: [$INVITEvia]
       [last_From:]
       [last_To:]
       Call-ID: [$INVCallID]
@@ -189,13 +188,13 @@ SDP is deliberate to simulate the actual client correctly.
 <!-- Play a pre-recorded PCAP file (RTP stream)                       -->
 <nop>
   <action>
-    <exec play_pcap_audio="scens/17Minutes_g711ALAW.pcap"/>
+    <exec play_pcap_audio="scens/g711a.pcap"/>
   </action>
 </nop>
 
 <!-- Pause 17 Minutes, which is approximately the duration of the      -->
 <!-- PCAP file                                                        -->
-<pause milliseconds="1023000"/>
+<pause milliseconds="90000"/>
 
 <!--
  Endpoint initiates an UPDATE transaction, not a session or target refresh seems to be for audit purposes.
@@ -244,11 +243,12 @@ SDP is deliberate to simulate the actual client correctly.
 -->
   <nop>
     <action>
-      <exec play_pcap_audio="scens/17Minutes_g711ALAW.pcap"/>
+      <exec play_pcap_audio="scens/G711-alaw-2-minutes.pcap"/>
     </action>
   </nop>
 
-<pause milliseconds="90000"/>
+
+  <pause milliseconds="120000"/>
 
   <recv request="BYE">
   </recv>
