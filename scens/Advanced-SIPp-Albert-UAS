@@ -118,7 +118,7 @@ Require 100rel header in the 180 ringing message
     <![CDATA[
 
       SIP/2.0 200 OK
-      Via: SIP/2.0/[transport] [remote_ip]:[remote_port];[$PRKbranch]
+      [last_Via:]
       [last_From:]
       [last_To:]
       [last_Call-ID:]
