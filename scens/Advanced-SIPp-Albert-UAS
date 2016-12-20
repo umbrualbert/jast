@@ -32,6 +32,7 @@ Now sit and wait for an incoming call ...
       <ereg regexp=".*" search_in="hdr" header="Via:" check_it="true" assign_to="INVITEvia" />
       <ereg regexp=".*" search_in="hdr" header="CSeq:" check_it="true" assign_to="INVcseq" />
       <ereg regexp="\s+(.*)" search_in="hdr" header="Call-ID:" check_it="true" assign_to="INVCallID" />
+      <ereg regexp="^<(.*)>" search_in="hdr" header="Contact:" check_it="true" assign_to="INVContact" />
     </action>
   </recv>
 
@@ -203,7 +204,7 @@ SDP is deliberate to simulate the actual client correctly.
   <send start_txn="update">
     <![CDATA[
 
-      UPDATE sip:[$INVFromUser]@[remote_ip]:[local_port];transport=[transport] SIP/2.0
+      UPDATE [$INVContact] SIP/2.0
       Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=z9hG4bK153FBA1F11[pid][call_number]
       From: "[field3]"[$INVTo]
       To: [$INVFrom]
