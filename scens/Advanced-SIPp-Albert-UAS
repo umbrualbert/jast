@@ -205,7 +205,7 @@ SDP is deliberate to simulate the actual client correctly.
 
       UPDATE [$INVContact] SIP/2.0
       Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=z9hG4bK153FBA1F11[pid][call_number]
-      From: "[field2]"[$INVTo]
+      From: [$INVTo]
       To: [$INVFrom]
       [last_Call-ID:]
       User-Agent: Cisco-SIPGateway/IOS-15.3.2.T
