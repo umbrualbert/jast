@@ -32,7 +32,7 @@ Now sit and wait for an incoming call ...
       <ereg regexp=".*" search_in="hdr" header="Via:" check_it="true" assign_to="INVITEvia" />
       <ereg regexp=".*" search_in="hdr" header="CSeq:" check_it="true" assign_to="INVcseq" />
       <ereg regexp="\s+(.*)" search_in="hdr" header="Call-ID:" check_it="true" assign_to="INVCallID" />
-      <ereg regexp="^<(.*)>" search_in="hdr" header="Contact:" check_it="true" assign_to="INVContact" />
+      <ereg regexp="\s+<(.*)>" search_in="hdr" header="Contact:" check_it="true" assign_to="INVContact" />
     </action>
   </recv>
 
