@@ -31,7 +31,6 @@ Now sit and wait for an incoming call ...
     <action>
       <ereg regexp=".*" search_in="hdr" header="Via:" check_it="true" assign_to="INVITEvia" />
       <ereg regexp=".*" search_in="hdr" header="CSeq:" check_it="true" assign_to="INVcseq" />
-      <ereg regexp="\s+(.*)" search_in="hdr" header="Call-ID:" check_it="true" assign_to="INVCallID" />
       <ereg regexp="\s+<(.*)>" search_in="hdr" header="Contact:" check_it="true" assign_to="INVContact" />
     </action>
   </recv>
@@ -146,7 +145,7 @@ SDP is deliberate to simulate the actual client correctly.
       Via: [$INVITEvia]
       [last_From:]
       [last_To:]
-      Call-ID: [$INVCallID]
+      [last_Call-ID:]
       CSeq: [$INVcseq]
       Allow: INVITE, OPTIONS, BYE, CANCEL, ACK, PRACK, UPDATE, REFER, SUBSCRIBE, NOTIFY, INFO, REGISTER
       Allow-Events: telephone-event
