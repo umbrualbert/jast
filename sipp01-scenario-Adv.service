@@ -10,7 +10,7 @@ ExecStartPre=-/usr/bin/docker kill sipp01-scenario1-Adv-client
 ExecStartPre=-/usr/bin/docker rm sipp01-scenario1-Adv-server
 ExecStartPre=-/usr/bin/docker rm sipp01-scenario1-Adv-client
 Type=oneshot
-ExecStart=/usr/bin/docker run --cpuset-cpus=0-1 --cpu-shares=50 --cpu-shares=50 --net=host -dit --restart always -e ARGS="-i 192.168.168.15 -mi 192.168.168.15 -mp 17384 -sf /scens/Advanced-SIPp-Albert-UAC 192.168.168.10:5061 -inf /scens/2numbers.csv -r 1 -m 1" --name "sipp01-scenario1-Adv-client" sipp-image
+ExecStart=/usr/bin/docker run --cpuset-cpus=0-1 --cpu-shares=50 --cpu-shares=50 --net=host -dit --restart always -e ARGS="-i 192.168.168.15 -mi 192.168.168.15 -mp 17384 -sf /scens/Advanced-SIPp-Albert-UAC 192.168.168.10:5061 -inf /scens/2numbers.csv -r 5 -m 1000" --name "sipp01-scenario1-Adv-client" sipp-image
 ExecStart=/usr/bin/docker run --cpuset-cpus=2-3 --cpu-shares=50 --cpu-shares=50 --net=host --restart always -dit -e ARGS="-i 10.118.111.125 -p 5061 -mi 10.118.111.125 -mp 17384 -sf /scens/Advanced-SIPp-Albert-UAS -inf /scens/2numbers.csv" --name "sipp01-scenario1-Adv-server" sipp-image
 
 [Install]
