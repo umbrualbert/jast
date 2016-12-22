@@ -81,8 +81,9 @@
       s=-
       c=IN IP[media_ip_type] [media_ip]
       t=0 0
-      m=audio [media_port] RTP/AVP 0
-      a=rtpmap:0 PCMU/8000
+      m=audio [media_port] RTP/AVP 8 18 101
+      a=rtpmap:1 PCMA/8000
+
 
     ]]>
   </send>
@@ -93,7 +94,7 @@
   </recv>
 
   <!-- Keep the call open for a while  -->
-  <pause milliseconds="1023000"/>
+  <pause milliseconds="1000000"/>
 
   <recv request="BYE">
   </recv>
