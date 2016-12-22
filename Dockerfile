@@ -20,7 +20,7 @@ CMD ["/bin/bash", "/run_sipp.sh"]
 # expose udp port 5060 & 8888
 EXPOSE 5060-5069/udp
 EXPOSE 8888/udp
-EXPOSE 16384-20000/udp
+EXPOSE 16384-32000/udp
 
 # data
 #VOLUME /data

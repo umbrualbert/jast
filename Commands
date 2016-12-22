@@ -16,8 +16,8 @@ docker run --cpu-shares=50 --net=host -dit -e ARGS="-i 192.168.100.72 -p 5060 -m
 docker run --cpu-shares=50 --net=host -dit -e ARGS="-i 192.168.69.72 -mi 192.168.69.72 -mp 19384 -sf /scens/uac.xml 192.168.168.10:5060 -r 100" --name "SIPp-client" umbrualbert/jast-fixed
 
 
-docker run --cpu-shares=50 --net=host -dit -e ARGS="-i 192.168.168.16 -p 5060 -mi 192.168.168.16 -mp 16384 -rtp_echo -sf /scens/Advanced-SIPp-Albert-UAS -inf /scens/2numbers.csv" --name "SIPp Server" umbrualbert-sipp
-docker run --cpu-shares=50 --net=host -dit -e ARGS="-i 192.168.168.15 -mi 192.168.168.15 -mp 16384 -sf /scens/Advanced-SIPp-Albert-UAC -inf /scens/2numbers.csv 192.168.168.10:5060 -r 2 -m 1 " --name "SIPp Client" umbrualbert-sipp
+docker run --cpu-shares=50 --net=host -dit -e ARGS="-i 192.168.168.16 -p 5060 -mi 192.168.168.16 -mp 16384 -rtp_echo -sf /scens/Advanced-SIPp-Albert-UAS-Test -inf /scens/2numbers.csv" --name "SIPp-Server" umbrualbert-sipp
+docker run --cpu-shares=50 --net=host -dit -e ARGS="-i 192.168.168.15 -mi 192.168.168.15 -mp 16384 -sf /scens/Advanced-SIPp-Albert-UAC -inf /scens/2numbers.csv 192.168.168.10:5060 -r 2 -m 1 " --name "SIPp-Client" umbrualbert-sipp
 
 port 5061
 docker run --cpu-shares=50 --net=host -dit -e ARGS="-i 192.168.100.72 -p 5061 -mi 192.168.100.72 -mp 17384 -rtp_echo -sf /scens/uas.xml " --name "SIPp Server 192.168.100.72-16384" umbrualbert/jast-fixed
@@ -27,3 +27,11 @@ docker run --cpu-shares=50 --net=host -dit -e ARGS="-i 192.168.69.72 -mi 192.168
 
 docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
+
+docker kill $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+docker rmi sipp-image
+cd ~/SIP/jast
+git pull
+docker build --rm -t sipp-image ~/SIP/jast/
+sudo systemctl start sipp*
