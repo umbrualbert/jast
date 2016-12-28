@@ -35,3 +35,6 @@ cd ~/SIP/jast
 git pull
 docker build --rm -t sipp-image ~/SIP/jast/
 sudo systemctl start sipp*
+
+#Container Monitoring
+docker run -d --name=cadvisor -p 8080:8080 --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro google/cadvisor:latest
