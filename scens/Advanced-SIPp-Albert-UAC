@@ -94,7 +94,7 @@
       Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
       From: sipp <sip:[field1]@[local_ip]:[local_port]>;tag=[pid]SIPpTag09[call_number]
       To: sut <sip:[service]@[remote_ip]:[remote_port]>[peer_tag_param]
-      Call-ID: [call_id]
+      [last_Call-ID:]
       CSeq: 2 PRACK
       Contact: sip:[field1]@[local_ip]:[local_port]
       Max-Forwards: 70
@@ -134,7 +134,7 @@
       Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
       From: sipp <sip:[field1]@[local_ip]:[local_port]>;tag=[pid]SIPpTag09[call_number]
       To: sut <sip:[service]@[remote_ip]:[remote_port]>[peer_tag_param]
-      Call-ID: [call_id]
+      [last_Call-ID:]
       CSeq: 1 ACK
       Contact: sip:[field1]@[local_ip]:[local_port]
       Max-Forwards: 70
@@ -211,7 +211,7 @@
       Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
       From: sipp <sip:[field1]@[local_ip]:[local_port]>;tag=[pid]SIPpTag09[call_number]
       To: sut <sip:[service]@[remote_ip]:[remote_port]>[peer_tag_param]
-      Call-ID: [call_id]
+      [last_Call-ID:]
       CSeq: 2 BYE
       Contact: sip:[field1]@[local_ip]:[local_port]
       Max-Forwards: 70
