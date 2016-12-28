@@ -51,7 +51,7 @@
       Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
       From: sipp <sip:[field1]@[local_ip]:[local_port]>;tag=[pid]SIPpTag09[call_number]
       To: sut <sip:[service]@[remote_ip]:[remote_port]>
-      Call-ID: [call_id][branch][pid]
+      Call-ID: [branch][pid][call_id][date|md5sum]
       CSeq: 1 INVITE
       Contact: sip:[field1]@[local_ip]:[local_port]
       Max-Forwards: 70
