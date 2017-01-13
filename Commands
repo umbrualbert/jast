@@ -23,6 +23,11 @@ port 5061
 docker run --cpu-shares=50 --net=host -dit -e ARGS="-i 192.168.100.72 -p 5061 -mi 192.168.100.72 -mp 17384 -rtp_echo -sf /scens/uas.xml " --name "SIPp Server 192.168.100.72-16384" umbrualbert/jast-fixed
 docker run --cpu-shares=50 --net=host -dit -e ARGS="-i 192.168.69.72 -mi 192.168.69.72 -mp 16384 -sf /scens/17minutes_G711.xml -inf /scens/2numbers.csv 192.168.69.200:5061 -r 2" --name "SIPp-client-192.168.69.72-16384" umbrualbert/jast-fixed
 
+#After changing /etc/systemd/system/*.service file
+sudo systemctl daemon-reload
+cd /etc/systemd/system/
+sudo systemctl start sipp*
+docker ps -a
 
 
 docker stop $(docker ps -a -q)
@@ -35,6 +40,4 @@ cd ~/SIP/jast
 git pull
 docker build --rm -t sipp-image ~/SIP/jast/
 sudo systemctl start sipp*
-
-#Container Monitoring
 docker run -d --name=cadvisor -p 8080:8080 --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro google/cadvisor:latest
