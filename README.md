@@ -26,4 +26,6 @@ docker run --cpu-shares=50 --net=host -dit -e ARGS="-i 192.168.69.72 -mi 192.168
 docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
 
-
+#Services
+sudo systemctl start sipp01-scenario-Adv.service
+/etc/systemd/system/
