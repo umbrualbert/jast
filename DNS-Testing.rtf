@@ -19,12 +19,16 @@ RestartSec=25 \
 ExecStartPre=-/usr/bin/docker kill\'a0sipp01-DNS-client \
 ExecStartPre=-/usr/bin/docker kill\'a0sipp01-DNS-server \
 ExecStartPre=-/usr/bin/docker rm\'a0sipp01-DNS-server \
-ExecStartPre=-/usr/bin/docker rm\'a0sipp01-DNS-client \
+ExecStartPre=-/usr/bin/docker rm\'a0sipp01-DNS-client\
+\pard\pardeftab720\sl320\partightenfactor0
+\cf0 ExecStartPre=-/usr/bin/docker kill\'a0sipp02-DNS-server \
+ExecStartPre=-/usr/bin/docker rm\'a0sipp02-DNS-server \
+\
 Type=oneshot \
 \
-ExecStart=/usr/bin/docker run --cpuset-cpus=0-23 --cpu-shares=50 --net=host --restart always -dit -e ARGS="-i 192.168.168.15 -p 5060 -mi 192.168.168.15 -mp 16384 -s Albert -sf /scens/uac.xml 192.168.168.10:5060 -r 1" --name "sipp01-DNS-client" sipp-image\
-\pard\pardeftab720\sl320\partightenfactor0
-\cf0 ExecStart=/usr/bin/docker run --cpuset-cpus=0-23 --cpu-shares=50 --net=host --restart always -dit -e ARGS="-i 10.118.111.125 -p 5060 -mi 10.118.111.125 -mp 16384 -sf /scens/uas.xml" --name "sipp01-DNS-server" sipp-image \
+ExecStart=/usr/bin/docker run --cpuset-cpus=0-23 --cpu-shares=50 --net=host --restart always -dit -e ARGS="-i 192.168.168.15 -p 5060 -mi 192.168.168.15 -mp 16384 -s Albert -sf /scens/uac_g711_34sec.xml 192.168.168.10:5060 -r 12" --name "sipp01-DNS-client" sipp-image\
+ExecStart=/usr/bin/docker run --cpuset-cpus=0-23 --cpu-shares=50 --net=host --restart always -dit -e ARGS="-i 10.118.111.125 -p 5060 -mi 10.118.111.125 -mp 16384 -sf /scens/uas_g711_34sec.xml" --name "sipp01-DNS-server" sipp-image \
+ExecStart=/usr/bin/docker run --cpuset-cpus=0-23 --cpu-shares=50 --net=host --restart always -dit -e ARGS="-i 10.118.111.126 -p 5060 -mi 10.118.111.126 -mp 16384 -sf /scens/uas_g711_34sec.xml" --name "sipp02-DNS-server" sipp-image \
 \
 [Install] \
 WantedBy=multi-user.target\
@@ -43,11 +47,14 @@ Requires=docker.service \
 \
 [Service] \
 RestartSec=25 \
+ExecStartPre=-/usr/bin/docker kill\'a0sipp01-DNS-server \
+ExecStartPre=-/usr/bin/docker rm\'a0sipp01-DNS-server\
 ExecStartPre=-/usr/bin/docker kill\'a0sipp02-DNS-server \
-ExecStartPre=-/usr/bin/docker rm\'a0sipp02-DNS-server \
+ExecStartPre=-/usr/bin/docker rm\'a0sipp02-DNS-server\
 Type=oneshot \
 \
-ExecStart=/usr/bin/docker run --cpuset-cpus=0-23 --cpu-shares=50 --net=host --restart always -dit -e ARGS="-i 10.118.111.122 -p 5060 -mi 10.118.111.122 -mp 16384 -sf /scens/uas.xml" --name "sipp02-DNS-server" sipp-image \
+ExecStart=/usr/bin/docker run --cpuset-cpus=0-23 --cpu-shares=50 --net=host --restart always -dit -e ARGS="-i 10.118.111.122 -p 5060 -mi 10.118.111.122 -mp 16384 -sf /scens/uas_g711_34sec.xml" --name "sipp01-DNS-server" sipp-image \
+ExecStart=/usr/bin/docker run --cpuset-cpus=0-23 --cpu-shares=50 --net=host --restart always -dit -e ARGS="-i 10.118.111.123 -p 5060 -mi 10.118.111.123 -mp 16384 -sf /scens/uas_g711_34sec.xml" --name "sipp02-DNS-server" sipp-image \
 \
 [Install] \
 WantedBy=multi-user.target\
@@ -71,11 +78,13 @@ ExecStartPre=-/usr/bin/docker rm\'a0sipp03-DNS-server\
 ExecStartPre=-/usr/bin/docker rm\'a0sipp04-DNS-server\
 Type=oneshot \
 \
-ExecStart=/usr/bin/docker run --cpuset-cpus=0-23 --cpu-shares=50 --net=host --restart always -dit -e ARGS="-i 10.118.111.118 -p 5060 -mi 10.118.111.118 -mp 16384 -sf /scens/uas.xml" --name "sipp03-DNS-server" sipp-image\
-ExecStart=/usr/bin/docker run --cpuset-cpus=0-23 --cpu-shares=50 --net=host --restart always -dit -e ARGS="-i 10.118.111.119 -p 5060 -mi 10.118.111.119 -mp 16384 -sf /scens/uas.xml" --name "sipp04-DNS-server" sipp-image \
+ExecStart=/usr/bin/docker run --cpuset-cpus=0-23 --cpu-shares=50 --net=host --restart always -dit -e ARGS="-i 10.118.111.118 -p 5060 -mi 10.118.111.118 -mp 16384 -sf /scens/uas_g711_34sec.xml" --name "sipp03-DNS-server" sipp-image\
+ExecStart=/usr/bin/docker run --cpuset-cpus=0-23 --cpu-shares=50 --net=host --restart always -dit -e ARGS="-i 10.118.111.119 -p 5060 -mi 10.118.111.119 -mp 16384 -sf /scens/uas_g711_34sec.xml" --name "sipp04-DNS-server" sipp-image \
 \
 [Install] \
 WantedBy=multi-user.target\
+\
+\
 \
 \pard\pardeftab720\sl320\partightenfactor0
 
