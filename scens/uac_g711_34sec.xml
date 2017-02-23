@@ -84,7 +84,7 @@
   <!-- Play a pre-recorded PCAP file (RTP stream)                       -->
   <nop>
     <action>
-      <exec play_pcap_audio="pcap/G711a_34.pcap"/>
+      <exec play_pcap_audio="scens/G711a_34.pcap"/>
     </action>
   </nop>
 
@@ -95,7 +95,7 @@
   <!-- Play an out of band DTMF '1'                                     -->
   <nop>
     <action>
-      <exec play_pcap_audio="pcap/dtmf_2833_1.pcap"/>
+      <exec play_pcap_audio="scens/dtmf_2833_1.pcap"/>
     </action>
   </nop>
 
@@ -129,4 +129,3 @@
   <CallLengthRepartition value="10, 50, 100, 500, 1000, 5000, 10000"/>
 
 </scenario>
-
