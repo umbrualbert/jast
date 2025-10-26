@@ -3,7 +3,8 @@
 Enterprise-grade SIPp load testing framework with Docker orchestration for SBC (Session Border Controller) testing and VoIP validation.
 
 [![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://www.docker.com/)
-[![SIPp](https://img.shields.io/badge/SIPp-3.4.1-green.svg)](https://github.com/SIPp/sipp)
+[![SIPp](https://img.shields.io/badge/SIPp-3.7.3-green.svg)](https://github.com/SIPp/sipp)
+[![TLS](https://img.shields.io/badge/TLS-enabled-blue.svg)](TLS_GUIDE.md)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ---
@@ -56,6 +57,13 @@ Enterprise-grade SIPp load testing framework with Docker orchestration for SBC (
 - RTP echo mode for media validation
 - DTMF and FAX support
 
+✅ **TLS/SIPS Support** ⭐ NEW
+- Full TLS/SSL encryption (OpenSSL 1.1.0+)
+- SIPS (SIP over TLS) on port 5061
+- Self-signed and CA-signed certificates
+- TLS key logging for Wireshark decryption
+- SCTP transport support
+
 ✅ **Enterprise Features**
 - Oracle Enterprise Linux support
 - Systemd integration
@@ -79,8 +87,10 @@ cd jast
 ```bash
 make build
 # or manually:
-docker build -t sipp:3.4.1 .
+docker build -t sipp:3.7.3 .
 ```
+
+**Note**: Image includes SIPp 3.7.3 with TLS/SSL, SCTP, PCAP, and GSL support
 
 ### 3. Configure Environment
 
@@ -855,8 +865,10 @@ make help                                     # Show help
 
 ---
 
-**Version**: 1.0.0
+**Version**: 2.0.0 (TLS-Enabled)
 **Last Updated**: 2025-10-26
-**SIPp Version**: 3.4.1
-**Scenarios**: 74+
+**SIPp Version**: 3.7.3
+**Features**: TLS/SSL, SCTP, PCAP, GSL
+**Scenarios**: 74+ (including TLS/SIPS)
 **PCAP Files**: 11
+**TLS Guide**: [TLS_GUIDE.md](TLS_GUIDE.md)

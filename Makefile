@@ -7,7 +7,7 @@
 .DEFAULT_GOAL := help
 
 # Variables
-DOCKER_IMAGE := sipp:3.4.1
+DOCKER_IMAGE := sipp:3.7.3
 COMPOSE_FILE := docker-compose.yml
 COMPOSE_SBC := docker-compose-sbc-test.yml
 LOGS_DIR := logs

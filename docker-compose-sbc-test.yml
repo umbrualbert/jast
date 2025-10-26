@@ -40,7 +40,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: sipp:3.4.1
+    image: sipp:3.7.3
     container_name: sipp-uac-g711
     hostname: uac-g711
     networks:
@@ -80,7 +80,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: sipp:3.4.1
+    image: sipp:3.7.3
     container_name: sipp-uac-g722
     hostname: uac-g722
     networks:
@@ -122,7 +122,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: sipp:3.4.1
+    image: sipp:3.7.3
     container_name: sipp-uac-long
     hostname: uac-long
     networks:
@@ -164,7 +164,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: sipp:3.4.1
+    image: sipp:3.7.3
     container_name: sipp-uac-register
     hostname: uac-register
     networks:
@@ -207,7 +207,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: sipp:3.4.1
+    image: sipp:3.7.3
     container_name: sipp-uas-g711
     hostname: uas-g711
     networks:
@@ -244,7 +244,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: sipp:3.4.1
+    image: sipp:3.7.3
     container_name: sipp-uas-multi
     hostname: uas-multi
     networks:
@@ -283,7 +283,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: sipp:3.4.1
+    image: sipp:3.7.3
     container_name: sipp-uas-basic
     hostname: uas-basic
     networks:
