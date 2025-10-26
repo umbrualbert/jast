@@ -1,0 +1,340 @@
+version: '3.8'
+
+#
+# SIPp Docker Compose - SBC Load Testing Configuration
+# Multi-container deployment for comprehensive SBC testing
+#
+# Architecture:
+#   UAC Group (172.20.0.0/16) -> SBC -> UAS Group (172.21.0.0/16)
+#
+# Usage:
+#   Start:  docker compose -f docker-compose-sbc-test.yml up -d
+#   Stop:   docker compose -f docker-compose-sbc-test.yml down
+#   Scale:  docker compose -f docker-compose-sbc-test.yml up -d --scale uac-g711=5
+#
+
+networks:
+  uac-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+
+  uas-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.21.0.0/16
+          gateway: 172.21.0.1
+
+services:
+  #============================================================================
+  # UAC GROUP - Call Generators (Client Side)
+  #============================================================================
+
+  # UAC - G.711 alaw (Most common codec)
+  uac-g711:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sipp:3.7.3
+    container_name: sipp-uac-g711
+    hostname: uac-g711
+    networks:
+      uac-network:
+        ipv4_address: 172.20.1.10
+    environment:
+      ARGS: >-
+        -i 172.20.1.10
+        -mi 172.20.1.10
+        -mp 16384
+        -sf /scens/sipp_uac_pcap_g711a.xml
+        -inf /scens/2numbers.csv
+        -r ${UAC_CPS:-10}
+        -m ${UAC_MAX_CALLS:-100}
+        -l ${UAC_TOTAL_CALLS:-1000}
+        -trace_err
+        -error_file /logs/uac-g711-errors.log
+        ${SBC_IP:-192.168.1.100}:${SBC_PORT:-5060}
+    volumes:
+      - ./scens:/scens:ro
+      - ./logs:/logs
+      - ./run_sipp.sh:/run_sipp.sh:ro
+    cap_add:
+      - NET_ADMIN
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+
+  # UAC - G.722 wideband audio
+  uac-g722:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sipp:3.7.3
+    container_name: sipp-uac-g722
+    hostname: uac-g722
+    networks:
+      uac-network:
+        ipv4_address: 172.20.1.11
+    environment:
+      ARGS: >-
+        -i 172.20.1.11
+        -mi 172.20.1.11
+        -mp 20384
+        -sf /scens/sipp_uac_pcap_g722.xml
+        -inf /scens/2numbers.csv
+        -r ${UAC_CPS:-10}
+        -m ${UAC_MAX_CALLS:-100}
+        -l ${UAC_TOTAL_CALLS:-1000}
+        -trace_err
+        -error_file /logs/uac-g722-errors.log
+        ${SBC_IP:-192.168.1.100}:${SBC_PORT:-5060}
+    volumes:
+      - ./scens:/scens:ro
+      - ./logs:/logs
+      - ./run_sipp.sh:/run_sipp.sh:ro
+    cap_add:
+      - NET_ADMIN
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+    profiles:
+      - advanced  # Only start with --profile advanced
+
+  # UAC - Long duration test (17 minutes)
+  uac-long-duration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sipp:3.7.3
+    container_name: sipp-uac-long
+    hostname: uac-long
+    networks:
+      uac-network:
+        ipv4_address: 172.20.1.12
+    environment:
+      ARGS: >-
+        -i 172.20.1.12
+        -mi 172.20.1.12
+        -mp 24384
+        -sf /scens/17minutes_G711.xml
+        -inf /scens/2numbers.csv
+        -r ${UAC_CPS:-5}
+        -m ${UAC_MAX_CALLS:-50}
+        -l ${UAC_TOTAL_CALLS:-500}
+        -trace_err
+        -error_file /logs/uac-long-errors.log
+        ${SBC_IP:-192.168.1.100}:${SBC_PORT:-5060}
+    volumes:
+      - ./scens:/scens:ro
+      - ./logs:/logs
+      - ./run_sipp.sh:/run_sipp.sh:ro
+    cap_add:
+      - NET_ADMIN
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+    profiles:
+      - stress  # Only start with --profile stress
+
+  # UAC - Registration test
+  uac-register:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sipp:3.7.3
+    container_name: sipp-uac-register
+    hostname: uac-register
+    networks:
+      uac-network:
+        ipv4_address: 172.20.1.13
+    environment:
+      ARGS: >-
+        -i 172.20.1.13
+        -sf /scens/sipp_uac_register.xml
+        -inf /scens/register_data.csv
+        -r ${UAC_CPS:-50}
+        -m ${UAC_MAX_CALLS:-500}
+        -trace_err
+        -error_file /logs/uac-register-errors.log
+        ${SBC_IP:-192.168.1.100}:${SBC_PORT:-5060}
+    volumes:
+      - ./scens:/scens:ro
+      - ./logs:/logs
+      - ./run_sipp.sh:/run_sipp.sh:ro
+    cap_add:
+      - NET_ADMIN
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+    profiles:
+      - registration  # Only start with --profile registration
+
+  #============================================================================
+  # UAS GROUP - Call Receivers (Server Side)
+  #============================================================================
+
+  # UAS - G.711 alaw responder
+  uas-g711:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sipp:3.7.3
+    container_name: sipp-uas-g711
+    hostname: uas-g711
+    networks:
+      uas-network:
+        ipv4_address: 172.21.1.10
+    environment:
+      ARGS: >-
+        -i 172.21.1.10
+        -mi 172.21.1.10
+        -mp 28384
+        -p 5060
+        -sf /scens/sipp_uas_pcap_g711a.xml
+        -rtp_echo
+        -trace_err
+        -error_file /logs/uas-g711-errors.log
+    volumes:
+      - ./scens:/scens:ro
+      - ./logs:/logs
+      - ./run_sipp.sh:/run_sipp.sh:ro
+    cap_add:
+      - NET_ADMIN
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+
+  # UAS - Multiple streams (advanced)
+  uas-multi-stream:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sipp:3.7.3
+    container_name: sipp-uas-multi
+    hostname: uas-multi
+    networks:
+      uas-network:
+        ipv4_address: 172.21.1.11
+    environment:
+      ARGS: >-
+        -i 172.21.1.11
+        -mi 172.21.1.11
+        -mp 30384
+        -p 5061
+        -sf /scens/sipp_uas_200_multiple_streams.xml
+        -rtp_echo
+        -trace_err
+        -error_file /logs/uas-multi-errors.log
+    volumes:
+      - ./scens:/scens:ro
+      - ./logs:/logs
+      - ./run_sipp.sh:/run_sipp.sh:ro
+    cap_add:
+      - NET_ADMIN
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+    profiles:
+      - advanced  # Only start with --profile advanced
+
+  # UAS - Basic responder
+  uas-basic:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sipp:3.7.3
+    container_name: sipp-uas-basic
+    hostname: uas-basic
+    networks:
+      uas-network:
+        ipv4_address: 172.21.1.12
+    environment:
+      ARGS: >-
+        -i 172.21.1.12
+        -mi 172.21.1.12
+        -mp 32384
+        -p 5062
+        -sf /scens/sipp_uas_basic.xml
+        -trace_err
+        -error_file /logs/uas-basic-errors.log
+    volumes:
+      - ./scens:/scens:ro
+      - ./logs:/logs
+      - ./run_sipp.sh:/run_sipp.sh:ro
+    cap_add:
+      - NET_ADMIN
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+
+#
+# USAGE EXAMPLES:
+#
+# 1. Basic deployment (uac-g711, uas-g711, uas-basic):
+#    docker compose -f docker-compose-sbc-test.yml up -d
+#
+# 2. With advanced scenarios:
+#    docker compose -f docker-compose-sbc-test.yml --profile advanced up -d
+#
+# 3. Stress testing:
+#    docker compose -f docker-compose-sbc-test.yml --profile stress up -d
+#
+# 4. Registration testing:
+#    docker compose -f docker-compose-sbc-test.yml --profile registration up -d
+#
+# 5. All scenarios:
+#    docker compose -f docker-compose-sbc-test.yml --profile advanced --profile stress --profile registration up -d
+#
+# 6. Scale UAC containers:
+#    docker compose -f docker-compose-sbc-test.yml up -d --scale uac-g711=5
+#
+# 7. Custom environment variables:
+#    SBC_IP=10.0.0.1 UAC_CPS=50 docker compose -f docker-compose-sbc-test.yml up -d
+#
