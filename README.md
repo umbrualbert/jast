@@ -188,7 +188,7 @@ sudo systemctl enable --now docker
 make build
 
 # Or manually
-docker build -t sipp:3.4.1 .
+docker build -t sipp:3.7.3 .
 
 # Verify
 docker images | grep sipp
@@ -273,7 +273,7 @@ docker run -d --name sipp-uac \
   -v $(pwd)/scens:/scens:ro \
   -v $(pwd)/logs:/logs \
   -e ARGS="-sf /scens/sipp_uac_basic.xml -r 10 -m 100 192.168.1.100:5060" \
-  sipp:3.4.1
+  sipp:3.7.3
 
 # UAS (Server)
 docker run -d --name sipp-uas \
@@ -281,7 +281,7 @@ docker run -d --name sipp-uas \
   -v $(pwd)/scens:/scens:ro \
   -v $(pwd)/logs:/logs \
   -e ARGS="-sf /scens/sipp_uas_basic.xml -rtp_echo" \
-  sipp:3.4.1
+  sipp:3.7.3
 ```
 
 ---
@@ -482,7 +482,7 @@ docker run -d --network host \
            -inf /scens/2numbers.csv \
            -r 5 -m 50 -d 1020000 \
            192.168.1.100:5060" \
-  sipp:3.4.1
+  sipp:3.7.3
 ```
 
 ### Codec Transcoding Tests
@@ -631,7 +631,7 @@ docker inspect sipp-uac-1 | grep ARGS
 # Enable verbose logging
 docker run --rm --network host \
   -e ARGS="-sf /scens/sipp_uac_basic.xml -trace_msg -trace_err 192.168.1.100:5060" \
-  sipp:3.4.1
+  sipp:3.7.3
 
 # Packet capture
 sudo tcpdump -i any -w debug.pcap 'udp port 5060 or portrange 16384-32768'

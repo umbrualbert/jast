@@ -295,7 +295,7 @@ SEQUENTIAL
 docker run --rm --network host \
   -v $(pwd)/scens:/scens:ro \
   -e "ARGS=-sf /scens/sipp_uac_basic.xml -r 10 -m 100 192.168.1.100:5060" \
-  sipp:3.4.1
+  sipp:3.7.3
 ```
 
 ### UAC with G.711 Media
@@ -306,7 +306,7 @@ docker run --rm --network host \
   -e "ARGS=-i 192.168.1.50 -mi 192.168.1.50 -mp 16384 \
              -sf /scens/sipp_uac_pcap_g711a.xml \
              -r 10 -m 100 192.168.1.100:5060" \
-  sipp:3.4.1
+  sipp:3.7.3
 ```
 
 ### UAC with CSV Data Injection
@@ -317,7 +317,7 @@ docker run --rm --network host \
   -e "ARGS=-sf /scens/sipp_uac_pcap_g711a_csv.xml \
              -inf /scens/2numbers.csv \
              -r 20 -m 500 192.168.1.100:5060" \
-  sipp:3.4.1
+  sipp:3.7.3
 ```
 
 ### UAS with RTP Echo
@@ -328,7 +328,7 @@ docker run --rm --network host \
   -e "ARGS=-i 192.168.1.60 -mi 192.168.1.60 -mp 28384 \
              -sf /scens/sipp_uas_pcap_g711a.xml \
              -rtp_echo" \
-  sipp:3.4.1
+  sipp:3.7.3
 ```
 
 ### Long Duration Stability Test
@@ -342,7 +342,7 @@ docker run --rm --network host \
              -r 5 -m 50 -l 500 \
              -trace_stat -stf /logs/stats.csv \
              192.168.1.100:5060" \
-  sipp:3.4.1
+  sipp:3.7.3
 ```
 
 ### Registration Load Test
@@ -354,7 +354,7 @@ docker run --rm --network host \
              -inf /scens/register_data.csv \
              -r 100 -m 1000 \
              192.168.1.100:5060" \
-  sipp:3.4.1
+  sipp:3.7.3
 ```
 
 ---

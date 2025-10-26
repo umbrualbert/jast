@@ -203,6 +203,7 @@ docs: ## Generate documentation
 
 version: ## Show version information
 	@echo "JAST - Just Another SIP Tester"
-	@echo "Version: 1.0.0"
-	@echo "SIPp Version: 3.4.1"
+	@echo "Version: 2.0.0 (TLS-Enabled)"
+	@echo "SIPp Version: 3.7.3"
+	@echo "Features: TLS/SSL, SCTP, PCAP, GSL"
 	@echo "Repository: https://github.com/user/jast"

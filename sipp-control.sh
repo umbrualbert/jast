@@ -379,7 +379,7 @@ ${target_ip}:${target_port}"
         -e ARGS="$sipp_args" \
         -v "${SCENS_DIR}:/scens:ro" \
         -v "${LOGS_DIR}:/logs" \
-        sipp:3.4.1
+        sipp:3.7.3
 
     print_success "Container started: $container_name"
     print_info "Monitor with: docker logs -f $container_name"
@@ -459,7 +459,7 @@ ${rtp_param} \
         -e ARGS="$sipp_args" \
         -v "${SCENS_DIR}:/scens:ro" \
         -v "${LOGS_DIR}:/logs" \
-        sipp:3.4.1
+        sipp:3.7.3
 
     print_success "Container started: $container_name"
     print_info "Server listening on $local_ip:$sip_port"
@@ -492,7 +492,7 @@ run_quick_test() {
         -e ARGS="-sf /scens/sipp_uac_basic.xml -r 10 -m 50 ${target}:5060" \
         -v "${SCENS_DIR}:/scens:ro" \
         -v "${LOGS_DIR}:/logs" \
-        sipp:3.4.1
+        sipp:3.7.3
 
     print_success "Quick test started: $container_name"
     docker logs -f "$container_name"
@@ -661,7 +661,7 @@ ${target}:${SBC_PORT}"
         -e ARGS="$sipp_args" \
         -v "${SCENS_DIR}:/scens:ro" \
         -v "${LOGS_DIR}:/logs" \
-        sipp:3.4.1
+        sipp:3.7.3
 
     print_success "Container started: $container_name"
     echo "Stats: $stats_file"
@@ -696,7 +696,7 @@ run_uas_remote() {
         -e ARGS="$sipp_args" \
         -v "${SCENS_DIR}:/scens:ro" \
         -v "${LOGS_DIR}:/logs" \
-        sipp:3.4.1
+        sipp:3.7.3
 
     print_success "Server started: $container_name"
 }
