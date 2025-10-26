@@ -1,0 +1,75 @@
+version: '3.8'
+
+#
+# SIPp Docker Compose - Basic Deployment
+# Simple UAC and UAS container setup for development and testing
+#
+# Usage:
+#   Start:  docker compose up -d
+#   Stop:   docker compose down
+#   Logs:   docker compose logs -f
+#   Scale:  docker compose up -d --scale uac=3
+#
+
+services:
+  # UAC - User Agent Client (Call Generator)
+  uac:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sipp:3.4.1
+    container_name: sipp-uac-1
+    hostname: sipp-uac-1
+    network_mode: host
+    environment:
+      # Override with custom parameters
+      # Example: ARGS="-sf /scens/sipp_uac_basic.xml -r 10 -m 100 192.168.1.100:5060"
+      ARGS: ${UAC_ARGS:--sf /scens/sipp_uac_basic.xml -r 10 -m 100 -trace_err 127.0.0.1:5060}
+    volumes:
+      - ./scens:/scens:ro
+      - ./logs:/logs
+      - type: bind
+        source: ./run_sipp.sh
+        target: /run_sipp.sh
+        read_only: true
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 512M
+
+  # UAS - User Agent Server (Call Receiver)
+  uas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sipp:3.4.1
+    container_name: sipp-uas-1
+    hostname: sipp-uas-1
+    network_mode: host
+    environment:
+      # Override with custom parameters
+      ARGS: ${UAS_ARGS:--sf /scens/sipp_uas_basic.xml -rtp_echo -trace_err}
+    volumes:
+      - ./scens:/scens:ro
+      - ./logs:/logs
+      - type: bind
+        source: ./run_sipp.sh
+        target: /run_sipp.sh
+        read_only: true
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 512M
+
+# Note: Using host network mode for simplicity and performance
+# For network isolation, see docker-compose-isolated.yml
