@@ -31,6 +31,9 @@ RUN apt-get update && apt-get install -y \
     net-tools \
     iproute2 \
     ca-certificates \
+    # WAV audio conversion (for rtp_stream WAV file support)
+    sox \
+    libsox-fmt-all \
     && rm -rf /var/lib/apt/lists/*
 
 # Set SIPp version (use latest stable release)
@@ -112,7 +115,7 @@ CMD ["/bin/bash", "/run_sipp.sh"]
 LABEL version="${SIPP_VERSION}" \
       description="SIPp ${SIPP_VERSION} with TLS/SSL, SCTP, PCAP, and GSL support" \
       maintainer="umbrualbert@gmail.com" \
-      features="TLS,SSL,SCTP,PCAP,GSL" \
+      features="TLS,SSL,SCTP,PCAP,GSL,WAV" \
       base="ubuntu:22.04"
 
 # Health check (optional - checks if sipp binary exists and is executable)

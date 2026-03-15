@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!--
+  SIPp UAC scenario - RTP streaming from WAV file (G.711 A-law / PCMA)
+
+  Requires SIPp 3.7.0+ (native WAV rtp_stream support)
+
+  WAV file requirements:
+    - Encoding: G.711 A-law (PCMA)
+    - Sample rate: 8000 Hz
+    - Channels: Mono
+    - Convert with: ./scripts/wav2sipp.sh input.wav pcma
+
+  Usage:
+    sipp -sf sipp_uac_wav_g711a.xml -s <service> <target_ip> \
+         -d 10000 -m 1 -rtp_echo
+
+  rtp_stream syntax:
+    <exec rtp_stream="filename[,loop_count[,payload_type]]"/>
+    loop_count: -1 = loop forever until call ends, 0 = play once (default)
+    payload_type: 8 = PCMA (default), 0 = PCMU, 9 = G.722
+-->
+<scenario name="UAC WAV rtp_stream G711a">
+
+  <send retrans="500">
+    <![CDATA[
+      INVITE sip:[service]@[remote_ip]:[remote_port] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: "SIPp UAC" <sip:sipp@[local_ip]:[local_port]>;tag=[call_number]
+      To: <sip:[service]@[remote_ip]:[remote_port]>
+      Call-ID: [call_id]
+      CSeq: 1 INVITE
+      Contact: <sip:sipp@[local_ip]:[local_port]>
+      Max-Forwards: 70
+      Content-Type: application/sdp
+      Content-Length: [len]
+
+      v=0
+      o=sipp 53655765 2353687637 IN IP4 [local_ip]
+      s=SIPp WAV rtp_stream test
+      c=IN IP4 [local_ip]
+      t=0 0
+      m=audio [media_port] RTP/AVP 8
+      a=rtpmap:8 PCMA/8000
+      a=sendrecv
+    ]]>
+  </send>
+
+  <recv response="100" optional="true" />
+
+  <recv response="180" optional="true" />
+
+  <recv response="200" rtd="true">
+    <action>
+      <ereg regexp="o=.*" search_in="body" assign_to="1" />
+    </action>
+  </recv>
+
+  <send>
+    <![CDATA[
+      ACK sip:[service]@[remote_ip]:[remote_port] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: "SIPp UAC" <sip:sipp@[local_ip]:[local_port]>;tag=[call_number]
+      To: <sip:[service]@[remote_ip]:[remote_port]>[peer_tag_param]
+      Call-ID: [call_id]
+      CSeq: 1 ACK
+      Contact: <sip:sipp@[local_ip]:[local_port]>
+      Max-Forwards: 70
+      Content-Length: 0
+    ]]>
+  </send>
+
+  <!-- Stream WAV file via RTP (loops for duration of call) -->
+  <!-- Replace 'audio_pcma.wav' with your converted WAV file -->
+  <exec rtp_stream="audio_pcma.wav,-1,8"/>
+
+  <!-- Hold call for specified duration (-d parameter) -->
+  <pause/>
+
+  <!-- Stop RTP stream before BYE -->
+  <exec rtp_stream="pause"/>
+
+  <send retrans="500">
+    <![CDATA[
+      BYE sip:[service]@[remote_ip]:[remote_port] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: "SIPp UAC" <sip:sipp@[local_ip]:[local_port]>;tag=[call_number]
+      To: <sip:[service]@[remote_ip]:[remote_port]>[peer_tag_param]
+      Call-ID: [call_id]
+      CSeq: 2 BYE
+      Contact: <sip:sipp@[local_ip]:[local_port]>
+      Max-Forwards: 70
+      Content-Length: 0
+    ]]>
+  </send>
+
+  <recv response="200" />
+
+  <ResponseTimeRepartition value="10, 20, 30, 40, 50, 100, 150, 200"/>
+  <CallLengthRepartition value="10, 50, 100, 500, 1000, 5000, 10000"/>
+
+</scenario>
